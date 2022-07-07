@@ -10,10 +10,10 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import javax.persistence.Entity;
 
 @SpringBootApplication
-@Configuration
-@EnableJpaRepositories("com.example.demo.store.repositories")
-@ComponentScan("com.example.demo.api.factory")
-@EntityScan("com.example.demo.store.entities")
+//@Configuration
+//@EnableJpaRepositories("com.example.demo.store.repositories")
+//@ComponentScan("com.example.demo.api.factory")
+//@EntityScan("com.example.demo.store.entities")
 public class DemoApplication {
 
 	public static void main(String[] args) {
