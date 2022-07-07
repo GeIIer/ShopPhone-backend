@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 
 
 @Data
-@Builder
+@Builder(builderClassName = "Builder", toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductDTO {
