@@ -9,11 +9,14 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.OptionalLong;
 import java.util.stream.Collectors;
 
 @Transactional
 @RestController
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
+@RequestMapping({"/api"})
 public class ProductController {
 
     @Autowired
@@ -21,12 +24,22 @@ public class ProductController {
     @Autowired
     private final ProductDTOFactory productDTOFactory;
 
-    @GetMapping("/products")
-    public List<ProductDTO> getProducts() {
-        return (productRepository
-                .findAll())
-                .stream()
-                .map(productDTOFactory::makeProductDTO)
-                .collect(Collectors.toList());
+    public static final String GET_PRODUCTS = "/products";
+
+    @GetMapping(GET_PRODUCTS)
+    public List<ProductDTO> getProducts(@RequestParam(value = "category_id", required = false) Long optionalCategoryId) {
+
+        if (optionalCategoryId != null){
+          return (productRepository.findAllByCategory_IdCategory(optionalCategoryId)
+                  .stream().map(productDTOFactory::makeProductDTO)
+                  .collect(Collectors.toList()));
+        }
+        else {
+            return (productRepository
+                    .findAll())
+                    .stream()
+                    .map(productDTOFactory::makeProductDTO)
+                    .collect(Collectors.toList());
+        }
     }
 }
