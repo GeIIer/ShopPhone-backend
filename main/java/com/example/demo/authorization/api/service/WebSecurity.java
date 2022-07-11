@@ -40,7 +40,7 @@ public class WebSecurity {
                 .csrf().disable().authorizeRequests()
                 .antMatchers(HttpMethod.POST, SecurityConstants.SIGN_UP_URL)
                 .permitAll()
-                .anyRequest().authenticated().and()
+                .anyRequest().authenticated().and() //убрать общий доступ на запросы
 
                 .addFilter(new JWTAuthenticationFilter(authenticationManager))
 

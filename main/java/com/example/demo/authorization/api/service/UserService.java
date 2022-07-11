@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 
@@ -27,5 +28,11 @@ public class UserService implements UserDetailsService {
             throw new UsernameNotFoundException(email);
 
         return new User(userEntity.getEmail(), userEntity.getPassword(), new ArrayList<>());
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public String saveDto(AccountEntity accountDTO) {
+        accountDTO.setPassword(bCryptPasswordEncoder.encode(accountDTO.getPassword()));
+        return new User(accountDTO.getEmail(), accountDTO.getPassword(), new ArrayList<>()).getUsername();
     }
 }
