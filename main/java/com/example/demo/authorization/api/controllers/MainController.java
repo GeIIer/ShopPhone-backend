@@ -19,5 +19,4 @@ public class MainController {
     public ResponseEntity<String> saveUser(@RequestBody AccountEntity accountDTO) {
         return new ResponseEntity<>(userService.saveDto(accountDTO), HttpStatus.OK);
     }
-
 }
