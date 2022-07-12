@@ -8,5 +8,7 @@ public class SecurityConstants {
     public static final String SIGN_UP_URL = "/api/services/controller/user";
     public static final String LOGIN_URL = "/api/services/controller/user/login";
 
+    public static final String REGISTER_URL = "/api/services/controller/user/register";
+
     public static final String PRODUCT_URL = "/api//products";
 }
