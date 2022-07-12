@@ -35,7 +35,7 @@ public class MainController {
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody AccountEntity account) {
         if (accountRepository.existsAccountEntityByEmail(account.getEmail())) {
-            return ResponseEntity.badRequest().body("Error: Email is already in use!");
+            return ResponseEntity.badRequest().body("Error: Email уже существует");
         }
 
         long id = accountRepository.count() + 1;
@@ -48,6 +48,6 @@ public class MainController {
                 bCryptPasswordEncoder.encode(account.getPassword()),
                 new ArrayList<>());
         accountRepository.save(accountEntity);
-        return ResponseEntity.ok("User registered successfully!");
+        return ResponseEntity.ok("Регистрация прошла успешно");
     }
 }

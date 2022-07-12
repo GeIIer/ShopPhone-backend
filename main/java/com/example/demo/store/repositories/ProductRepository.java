@@ -11,4 +11,5 @@ import java.util.Optional;
 public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
     List<ProductEntity> findAll();
     List<ProductEntity> findAllByCategory_IdCategory(Long category_idCategory);
+    ProductEntity findByIdProduct(Long id);
 }
