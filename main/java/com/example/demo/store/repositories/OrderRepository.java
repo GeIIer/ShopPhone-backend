@@ -1,7 +1,7 @@
 package com.example.demo.store.repositories;
 
+import com.example.demo.authorization.entities.AccountEntity;
 import com.example.demo.store.entities.OrderEntity;
-import com.example.demo.store.entities.ProductEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -9,7 +9,7 @@ import java.util.List;
 
 @Repository
 public interface OrderRepository extends JpaRepository<OrderEntity, Long> {
-    List<OrderEntity> findAll();
+    List<OrderEntity> findAllByAccount_Id(Long account);
 
     OrderEntity save(OrderEntity orderEntity);
 

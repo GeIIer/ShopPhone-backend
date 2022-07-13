@@ -18,8 +18,6 @@ public class OrderDTO {
     @NonNull
     private Long idOrder;
     @NonNull
-    private Collection<ProductEntity> productEntities;
-    @NonNull
-    private String email;
+    private Collection<ProductDTO> productEntities;
 
 }

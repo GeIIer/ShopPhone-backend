@@ -12,6 +12,7 @@ import com.example.demo.store.repositories.OrderRepository;
 import com.example.demo.store.repositories.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Response;
+import org.apache.tomcat.util.json.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,14 +39,19 @@ public class OrderController {
     @Autowired
     private final AccountRepository accountRepository;
 
-    public static final String GET_PRODUCTS = "/orders";
+    public static final String GET_ORDERS = "/orders";
 
-    @GetMapping(GET_PRODUCTS)
-    public List<OrderDTO> getOrders() {
-        return (orderRepository.findAll())
-                .stream()
-                .map(orderFactory::makeOrderDTO)
-                .collect(Collectors.toList());
+    @GetMapping(GET_ORDERS)
+    public List<OrderDTO> getOrders(@RequestParam(value = "email", required = false) String email) {
+        if (email != null) {
+            if (accountRepository.existsAccountEntityByEmail(email)) {
+                AccountEntity accountEntity = accountRepository.findByEmail(email);
+                List<OrderEntity> orderEntities = orderRepository.findAllByAccount_Id(accountEntity.getId());
+                return orderEntities.stream().map(orderFactory::makeOrderDTO).collect(Collectors.toList());
+            }
+            else return null;
+        }
+        else return null;
     }
 
     @PostMapping("/addOrder")
