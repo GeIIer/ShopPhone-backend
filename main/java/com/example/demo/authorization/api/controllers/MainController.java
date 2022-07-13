@@ -1,11 +1,13 @@
 package com.example.demo.authorization.api.controllers;
 
+import com.example.demo.authorization.api.dto.AccountDTO;
 import com.example.demo.authorization.api.service.UserService;
 import com.example.demo.authorization.entities.AccountEntity;
 import com.example.demo.authorization.entities.RoleEntity;
 import com.example.demo.authorization.repositories.AccountInterface;
 import com.example.demo.authorization.repositories.AccountRepository;
 import lombok.AllArgsConstructor;
+import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +28,20 @@ public class MainController {
     private AccountRepository accountRepository;
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @GetMapping("/getUser")
+    public AccountDTO loadUserByEmail(@RequestParam(value = "email", required = false) String email) {
+        if (email != null){
+            AccountEntity accountEntity = accountRepository.findByEmail(email);
+            return new AccountDTO(accountEntity.getId(),
+                    accountEntity.getFirstName(),
+                    accountEntity.getLastName(),
+                    accountEntity.getEmail(),
+                    accountEntity.getPhoneNumber());
+        }
+        else return null;
+    }
+
 
     @PostMapping()
     public ResponseEntity<String> saveUser(@RequestBody AccountEntity account) {
