@@ -20,7 +20,13 @@ public class OrderEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long idOrder;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER, cascade =
+            {
+                    CascadeType.DETACH,
+                    CascadeType.MERGE,
+                    CascadeType.REFRESH,
+                    CascadeType.PERSIST
+            })
     @JoinTable(
             name = "orders",
             joinColumns = @JoinColumn(

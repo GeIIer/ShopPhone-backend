@@ -3,7 +3,6 @@ package com.example.demo.api.controllers;
 import com.example.demo.api.dto.OrderDTO;
 import com.example.demo.api.dto.ProductDTO;
 import com.example.demo.api.factory.OrderFactory;
-import com.example.demo.api.factory.ProductDTOFactory;
 import com.example.demo.authorization.entities.AccountEntity;
 import com.example.demo.authorization.repositories.AccountRepository;
 import com.example.demo.store.entities.OrderEntity;
@@ -11,16 +10,12 @@ import com.example.demo.store.entities.ProductEntity;
 import com.example.demo.store.repositories.OrderRepository;
 import com.example.demo.store.repositories.ProductRepository;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
-import org.apache.tomcat.util.json.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,6 +36,10 @@ public class OrderController {
 
     public static final String GET_ORDERS = "/orders";
 
+    public static final String CREATE_NEW_ORDER = "/order/add";
+
+    public static final String DELETE_ORDER = "/order/{order_id}";
+
     @GetMapping(GET_ORDERS)
     public List<OrderDTO> getOrders(@RequestParam(value = "email", required = false) String email) {
         if (email != null) {
@@ -54,14 +53,13 @@ public class OrderController {
         else return null;
     }
 
-    @PostMapping("/addOrder")
+    @PostMapping(CREATE_NEW_ORDER)
     public ResponseEntity<String> addOrder (@RequestParam(value = "email", required = false) String email,
                                             @RequestBody ProductDTO[] productDTO) {
         if (email != null &&productDTO != null && productDTO.length > 0) {
             if (accountRepository.existsAccountEntityByEmail(email)) {
 
                 OrderEntity entity = new OrderEntity();
-                entity.setIdOrder(orderRepository.count()+1);
                 entity.setAccount(accountRepository.findByEmail(email));
                 ArrayList<ProductEntity> productEntities = new ArrayList<>();
                 for (int i = 0; i < productDTO.length; i++){
@@ -78,5 +76,16 @@ public class OrderController {
             ResponseEntity.badRequest().body("Продуктов нет");
         }
         return ResponseEntity.ok("addOrder");
+    }
+
+    @DeleteMapping(DELETE_ORDER)
+    public ResponseEntity<String> deleteProject(@PathVariable("order_id") Long orderId) {
+
+        if(!orderRepository.existsByIdOrder(orderId)) {
+            return ResponseEntity.badRequest().body("order not found");
+        }
+        orderRepository.deleteById(orderId);
+
+        return ResponseEntity.ok("delete "+orderId);
     }
 }
