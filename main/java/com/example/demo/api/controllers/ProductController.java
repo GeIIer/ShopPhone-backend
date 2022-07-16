@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
-@RequestMapping({"/api"})
+@RequestMapping({"/api/products"})
 public class ProductController {
 
     @Autowired
@@ -25,9 +25,7 @@ public class ProductController {
     @Autowired
     private final ProductDTOFactory productDTOFactory;
 
-    public static final String GET_PRODUCTS = "/products";
-
-    @GetMapping(GET_PRODUCTS)
+    @GetMapping()
     public List<ProductDTO> getProducts(@RequestParam(value = "category_id", required = false) Long optionalCategoryId) {
 
         if (optionalCategoryId != null){

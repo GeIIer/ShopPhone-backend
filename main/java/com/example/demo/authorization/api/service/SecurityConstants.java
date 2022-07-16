@@ -10,5 +10,7 @@ public class SecurityConstants {
 
     public static final String REGISTER_URL = "/api/services/controller/user/register";
 
-    public static final String PRODUCT_URL = "/api/products";
+    public static final String PRODUCTS_URL = "/api/products/**";
+
+
 }

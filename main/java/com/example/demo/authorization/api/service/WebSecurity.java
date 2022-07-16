@@ -41,12 +41,10 @@ public class WebSecurity {
         http
                 .cors().and()
                 .csrf().disable().authorizeRequests()
-                .antMatchers(HttpMethod.POST, SecurityConstants.SIGN_UP_URL)
-                .permitAll()
+                .antMatchers(HttpMethod.POST, SecurityConstants.SIGN_UP_URL).permitAll()
                 .antMatchers(HttpMethod.POST, SecurityConstants.LOGIN_URL).permitAll()
                 .antMatchers(HttpMethod.POST, SecurityConstants.REGISTER_URL).permitAll()
-                .antMatchers(HttpMethod.GET, SecurityConstants.PRODUCT_URL)
-                .permitAll()
+                .antMatchers(SecurityConstants.PRODUCTS_URL).permitAll()
                 .anyRequest().authenticated().and()//убрать общий доступ на запросы
 
                 .addFilter(new JWTAuthenticationFilter(authenticationManager))
