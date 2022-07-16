@@ -23,6 +23,7 @@ public class OrderFactory {
                         .stream()
                         .map(productDTOFactory::makeProductDTO)
                         .collect(Collectors.toList()))
+                .totalPrice(entity.getTotalPrice())
                 .build();
     }
 }

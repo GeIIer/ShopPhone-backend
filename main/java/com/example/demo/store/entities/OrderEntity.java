@@ -37,4 +37,6 @@ public class OrderEntity {
 
     @ManyToOne (fetch = FetchType.LAZY, optional = false)
     private AccountEntity account;
+
+    private double totalPrice;
 }

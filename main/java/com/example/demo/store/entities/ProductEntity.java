@@ -1,11 +1,9 @@
 package com.example.demo.store.entities;
 
-import com.example.demo.authorization.entities.RoleEntity;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.Collection;
 
 @Entity
 @NoArgsConstructor

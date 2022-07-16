@@ -55,8 +55,9 @@ public class OrderController {
 
     @PostMapping(CREATE_NEW_ORDER)
     public ResponseEntity<String> addOrder (@RequestParam(value = "email", required = false) String email,
+                                            @RequestParam(value = "price", required = false) double price,
                                             @RequestBody ProductDTO[] productDTO) {
-        if (email != null &&productDTO != null && productDTO.length > 0) {
+        if (email != null &&productDTO != null && productDTO.length > 0 && price > 0) {
             if (accountRepository.existsAccountEntityByEmail(email)) {
 
                 OrderEntity entity = new OrderEntity();
@@ -66,6 +67,7 @@ public class OrderController {
                     productEntities.add(productRepository.findByIdProduct(productDTO[i].getIdProduct()));
                 }
                 entity.setProductEntities(productEntities);
+                entity.setTotalPrice(price);
                 orderRepository.save(entity);
             }
             else {

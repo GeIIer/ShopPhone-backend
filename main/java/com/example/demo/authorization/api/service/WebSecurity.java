@@ -47,7 +47,7 @@ public class WebSecurity {
                 .antMatchers(HttpMethod.POST, SecurityConstants.REGISTER_URL).permitAll()
                 .antMatchers(HttpMethod.GET, SecurityConstants.PRODUCT_URL)
                 .permitAll()
-                .anyRequest().authenticated().and() //убрать общий доступ на запросы
+                .anyRequest().authenticated().and()//убрать общий доступ на запросы
 
                 .addFilter(new JWTAuthenticationFilter(authenticationManager))
 

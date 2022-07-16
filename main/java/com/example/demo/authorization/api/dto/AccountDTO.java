@@ -1,9 +1,6 @@
 package com.example.demo.authorization.api.dto;
 
-import com.example.demo.authorization.entities.RoleEntity;
 import lombok.*;
-
-import java.util.Collection;
 
 @Data
 @Builder(builderClassName = "Builder", toBuilder = true)

@@ -19,5 +19,7 @@ public class OrderDTO {
     private Long idOrder;
     @NonNull
     private Collection<ProductDTO> productEntities;
+    @NonNull
+    private double totalPrice;
 
 }
