@@ -2,6 +2,7 @@ package com.example.demo.api.controllers;
 
 import com.example.demo.api.dto.ProductDTO;
 import com.example.demo.api.factory.ProductDTOFactory;
+import com.example.demo.store.entities.ProductEntity;
 import com.example.demo.store.repositories.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,5 +42,11 @@ public class ProductController {
                     .map(productDTOFactory::makeProductDTO)
                     .collect(Collectors.toList());
         }
+    }
+
+    @GetMapping("/product")
+    public ProductDTO getProduct (@RequestParam(value = "product", required = false) Long idProduct) {
+        ProductEntity entity = productRepository.findByIdProduct(idProduct);
+        return productDTOFactory.makeProductDTO(entity);
     }
 }
