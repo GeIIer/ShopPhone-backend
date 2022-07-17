@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 
 @Data
 @Builder(builderClassName = "Builder", toBuilder = true)
@@ -27,6 +29,8 @@ public class ProductDTO {
     private String manufacturerDTO;
     @JsonProperty("category")
     private String categoryDTO;
+
+    private List<String> urlImage;
 
     private double price;
 

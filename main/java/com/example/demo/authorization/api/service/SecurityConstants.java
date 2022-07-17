@@ -12,5 +12,7 @@ public class SecurityConstants {
 
     public static final String PRODUCTS_URL = "/api/products/**";
 
+    public static final String IMAGE_PRODUCT_URL = "/api/images/**";
+
 
 }

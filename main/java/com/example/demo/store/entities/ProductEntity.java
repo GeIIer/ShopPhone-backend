@@ -1,11 +1,17 @@
 package com.example.demo.store.entities;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "product")
@@ -26,61 +32,19 @@ public class ProductEntity {
     @JoinColumn(name = "category_id")
     private СategoryEntity category;
 
+    @OneToMany (fetch = FetchType.LAZY, cascade = {
+            CascadeType.DETACH,
+            CascadeType.MERGE,
+            CascadeType.REFRESH,
+            CascadeType.PERSIST
+    })
+    private List<ImageEntity> imageEntityList = new ArrayList<>();
+
     private double price;
 
-    public void setPrice(double price) {
-        this.price = price;
+    public void addImgProduct(ImageEntity entity) {
+        this.imageEntityList.add(entity);
+        entity.setProduct(this);
     }
 
-    public double getPrice() {
-        return price;
-    }
-
-    public Long getIdProduct() {
-        return idProduct;
-    }
-
-    public void setIdProduct(Long idProduct) {
-        this.idProduct = idProduct;
-    }
-
-    public String getNameProduct() {
-        return nameProduct;
-    }
-
-    public void setNameProduct(String nameProduct) {
-        this.nameProduct = nameProduct;
-    }
-
-    public String getCharacteristic() {
-        return characteristic;
-    }
-
-    public void setCharacteristic(String characteristic) {
-        this.characteristic = characteristic;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public ManufacturerEntity getManufacturer() {
-        return manufacturer;
-    }
-
-    public void setManufacturer(ManufacturerEntity manufacturer) {
-        this.manufacturer = manufacturer;
-    }
-
-    public СategoryEntity getCategory() {
-        return category;
-    }
-
-    public void setCategory(СategoryEntity category) {
-        this.category = category;
-    }
 }

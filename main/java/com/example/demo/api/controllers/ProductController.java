@@ -25,6 +25,8 @@ public class ProductController {
     @Autowired
     private final ProductDTOFactory productDTOFactory;
 
+    private static final String GET_PRODUCT = "/product";
+
     @GetMapping()
     public List<ProductDTO> getProducts(@RequestParam(value = "category_id", required = false) Long optionalCategoryId) {
 
@@ -42,9 +44,9 @@ public class ProductController {
         }
     }
 
-    @GetMapping("/product")
+    @GetMapping(GET_PRODUCT)
     public ProductDTO getProduct (@RequestParam(value = "product", required = false) Long idProduct) {
         ProductEntity entity = productRepository.findByIdProduct(idProduct);
-        return productDTOFactory.makeProductDTO(entity);
+        return productDTOFactory.makeProductDTOWithImage(entity);
     }
 }
