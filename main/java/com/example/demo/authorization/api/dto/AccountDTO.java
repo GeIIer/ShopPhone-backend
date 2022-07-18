@@ -2,6 +2,9 @@ package com.example.demo.authorization.api.dto;
 
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
 @Builder(builderClassName = "Builder", toBuilder = true)
 @NoArgsConstructor
@@ -17,4 +20,6 @@ public class AccountDTO {
     private String email;
     @NonNull
     private String phoneNumber;
+    @NonNull
+    private List<String> roles;
 }

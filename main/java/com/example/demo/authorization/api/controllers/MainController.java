@@ -4,10 +4,9 @@ import com.example.demo.authorization.api.dto.AccountDTO;
 import com.example.demo.authorization.api.service.UserService;
 import com.example.demo.authorization.entities.AccountEntity;
 import com.example.demo.authorization.entities.RoleEntity;
-import com.example.demo.authorization.repositories.AccountInterface;
 import com.example.demo.authorization.repositories.AccountRepository;
+import com.example.demo.authorization.repositories.RoleRepository;
 import lombok.AllArgsConstructor;
-import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
@@ -27,6 +26,8 @@ public class MainController {
     @Autowired
     private AccountRepository accountRepository;
     @Autowired
+    private RoleRepository roleRepository;
+    @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @GetMapping("/getUser")
@@ -37,7 +38,11 @@ public class MainController {
                     accountEntity.getFirstName(),
                     accountEntity.getLastName(),
                     accountEntity.getEmail(),
-                    accountEntity.getPhoneNumber());
+                    accountEntity.getPhoneNumber(),
+                    accountEntity.getRoles()
+                            .stream()
+                            .map(RoleEntity::getName)
+                            .collect(Collectors.toList()));
         }
         else return null;
     }
@@ -53,16 +58,15 @@ public class MainController {
         if (accountRepository.existsAccountEntityByEmail(account.getEmail())) {
             return ResponseEntity.badRequest().body("Error: Email уже существует");
         }
-
-        long id = accountRepository.count() + 1;
-        AccountEntity accountEntity = new AccountEntity(
-                id,
-                account.getFirstName(),
-                account.getLastName(),
-                account.getEmail(),
-                account.getPhoneNumber(),
-                bCryptPasswordEncoder.encode(account.getPassword()),
-                new ArrayList<>());
+        ArrayList<RoleEntity> roles = new ArrayList<>();
+        roles.add(roleRepository.findByName("USER"));
+        AccountEntity accountEntity = new AccountEntity();
+        accountEntity.setFirstName(account.getFirstName());
+        accountEntity.setLastName(account.getLastName());
+        accountEntity.setEmail(account.getEmail());
+        accountEntity.setPhoneNumber(account.getPhoneNumber());
+        accountEntity.setPassword(bCryptPasswordEncoder.encode(account.getPassword()));
+        accountEntity.setRoles(roles);
         accountRepository.save(accountEntity);
         return ResponseEntity.ok("Регистрация прошла успешно");
     }
