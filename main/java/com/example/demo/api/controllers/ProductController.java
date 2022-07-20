@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 @Transactional
 @RestController
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping({"/api/products"})
 public class ProductController {
 

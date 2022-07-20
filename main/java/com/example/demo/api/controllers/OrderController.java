@@ -1,5 +1,6 @@
 package com.example.demo.api.controllers;
 
+import com.example.demo.api.dto.AckDto;
 import com.example.demo.api.dto.OrderDTO;
 import com.example.demo.api.dto.ProductDTO;
 import com.example.demo.api.factory.OrderFactory;
@@ -22,7 +23,7 @@ import java.util.stream.Collectors;
 @Transactional
 @RestController
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping({"/api"})
 public class OrderController {
     @Autowired
@@ -81,13 +82,13 @@ public class OrderController {
     }
 
     @DeleteMapping(DELETE_ORDER)
-    public ResponseEntity<String> deleteProject(@PathVariable("order_id") Long orderId) {
+    public AckDto deleteProject(@PathVariable("order_id") Long orderId) {
 
         if(!orderRepository.existsByIdOrder(orderId)) {
-            return ResponseEntity.badRequest().body("order not found");
+            return AckDto.makeDefault(false);
         }
         orderRepository.deleteById(orderId);
 
-        return ResponseEntity.ok("delete "+orderId);
+        return AckDto.makeDefault(true);
     }
 }
