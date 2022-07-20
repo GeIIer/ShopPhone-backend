@@ -2,10 +2,14 @@ package com.example.demo.authorization.api.service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.example.demo.authorization.entities.AccountEntity;
 import com.example.demo.authorization.repositories.AccountRepository;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import javax.servlet.FilterChain;
@@ -55,7 +59,24 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 
             if (user != null) {
 
-                return new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
+                AccountEntity account = accountRepository.findByEmail(user);
+
+                if (account == null) {
+                    throw new BadCredentialsException("Не существует: "+account);
+                }
+
+                String[] roles = new String[account.getRoles().size()];
+                for (int i = 0; i < roles.length; i++){
+                    roles[i] = account.getRoles().get(i).getName();
+                }
+
+                UserDetails principal = User.builder()
+                        .username(account.getEmail())
+                        .password(account.getPassword())
+                        .roles(roles)
+                        .build();
+
+                return new UsernamePasswordAuthenticationToken(user, null, principal.getAuthorities());
             }
 
             return null;

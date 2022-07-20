@@ -30,7 +30,7 @@ public class ProductEntity {
 
     @ManyToOne (fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "category_id")
-    private СategoryEntity category;
+    private CategoryEntity category;
 
     @OneToMany (fetch = FetchType.LAZY, cascade = {
             CascadeType.DETACH,

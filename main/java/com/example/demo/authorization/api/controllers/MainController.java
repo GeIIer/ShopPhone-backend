@@ -8,12 +8,16 @@ import com.example.demo.authorization.repositories.AccountRepository;
 import com.example.demo.authorization.repositories.RoleRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
@@ -55,6 +59,9 @@ public class MainController {
 
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody AccountEntity account) {
+        if (account == null) {
+            return ResponseEntity.badRequest().body("Error: нет данных");
+        }
         if (accountRepository.existsAccountEntityByEmail(account.getEmail())) {
             return ResponseEntity.badRequest().body("Error: Email уже существует");
         }

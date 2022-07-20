@@ -3,13 +3,20 @@ package com.example.demo.authorization.api.service;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.example.demo.authorization.entities.AccountEntity;
+import com.example.demo.authorization.repositories.AccountRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
@@ -23,11 +30,13 @@ import static com.example.demo.authorization.api.service.SecurityConstants.SECRE
 
 
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
 
-    public JWTAuthenticationFilter(AuthenticationManager authenticationManager) {
+    private final AccountRepository accountRepository;
+
+    public JWTAuthenticationFilter(AuthenticationManager authenticationManager, AccountRepository accountRepository) {
         this.authenticationManager = authenticationManager;
-
+        this.accountRepository = accountRepository;
         setFilterProcessesUrl("/api/services/controller/user/login");
     }
 
@@ -38,12 +47,28 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             AccountEntity creds = new ObjectMapper()
                     .readValue(req.getInputStream(), AccountEntity.class);
 
+
+            AccountEntity account = accountRepository.findByEmail(creds.getEmail());
+
+            if (account == null) {
+                throw new BadCredentialsException("Не существует: "+account);
+            }
+
+            String[] roles = new String[account.getRoles().size()];
+            for (int i = 0; i < roles.length; i++){
+                roles[i] = account.getRoles().get(i).getName();
+            }
+
+            UserDetails principal = User.builder()
+                    .username(account.getEmail())
+                    .password(account.getPassword())
+                    .roles(roles)
+                    .build();
+
             return authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
-                            creds.getEmail(),
-                            creds.getPassword(),
-                            new ArrayList<>())
-            );
+                    principal, creds.getPassword(), principal.getAuthorities()));
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

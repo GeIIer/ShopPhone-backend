@@ -46,9 +46,12 @@ public class WebSecurity {
                 .antMatchers(HttpMethod.POST, SecurityConstants.REGISTER_URL).permitAll()
                 .antMatchers(HttpMethod.GET, SecurityConstants.IMAGE_PRODUCT_URL).permitAll()
                 .antMatchers(HttpMethod.GET, SecurityConstants.PRODUCTS_URL).permitAll()
-                .anyRequest().authenticated().and()//убрать общий доступ на запросы
+                .antMatchers(SecurityConstants.ORDERS_URL).hasRole("USER")
+                .antMatchers(SecurityConstants.GET_ORDERS_URL).hasRole("USER")
+                .antMatchers(SecurityConstants.GET_PROFILE_URL).hasRole("USER")
+                .anyRequest().hasRole("ADMIN").and()//убрать общий доступ на запросы
 
-                .addFilter(new JWTAuthenticationFilter(authenticationManager))
+                .addFilter(new JWTAuthenticationFilter(authenticationManager, accountRepository))
 
                 .addFilter(new JWTAuthorizationFilter(authenticationManager, accountRepository))
                 .authenticationManager(authenticationManager)

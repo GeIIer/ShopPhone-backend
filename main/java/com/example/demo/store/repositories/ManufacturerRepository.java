@@ -10,4 +10,6 @@ import java.util.List;
 public interface ManufacturerRepository extends JpaRepository<ManufacturerEntity, Long> {
     List<ManufacturerEntity> findAll();
     ManufacturerEntity findByNameManuFact(String name);
+
+    boolean existsByNameManuFact(String name);
 }
